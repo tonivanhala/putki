@@ -1,0 +1,96 @@
+= putki
+
+[quote, Depeche Mode, Pipeline (1983)]
+____
+Get out the crane
+
+Construction time again
+
+What is it this time?
+
+We're laying a pipeline
+____
+
+## Overview
+
+putki allows you to specify and run pipelines that process streaming data. 
+
+## Main design criteria
+
+- leverage data-driven approach to pipeline management, so that pipelines
+  can be configured and modified using composition and core data functions.
+- support complex pipelines with branching, joining, and feedback cycles.
+- allow modifying pipelines while they are running.
+- provide a default runtime using a JVM thread pool,
+  while allowing extension to other runtimes.
+
+## Future (stretch) goals
+
+- provide alternative runtimes for JVM, e.g., based on `core.async`.
+- define and run pipelines on NodeJS using ClojureScript.
+- provide alternative schedulers for orchestrating jobs.
+- performance tests for different configurations.
+
+## Getting started
+
+Pipelines can be specified in hiccup-like syntax using nested vectors. 
+Call `putki.core/start!` to start the pipeline, and emit a value with
+`putki.core/emit` to feed it through the pipeline.
+
+[source,clojure]
+----
+(def graph [inc
+            [#(/ % 3)
+             [#(Math/ceil %)
+              [println]]]])
+(def pipeline (putki.core/start! graph))
+(putki.core/emit pipeline 7)
+----
+ 3.0
+
+Internally, `putki.core/start!` walks through the pipeline graph and
+transforms it into a workflow map. The map is fed into a workflow runner.
+The same actions can be split into explicit, separate, steps as below.
+
+[source,clojure]
+----
+(def graph [inc ; <1>
+            [#(/ % 3) ; <2>
+             [#(Math/ceil %)
+              [println]]]])
+(def workflow (putki.core/init graph)) ; <3>
+(def pipeline (putki.core/run! ; <4>
+               (putki.core/local-thread-runner) ; <5>
+               workflow))
+----
+<1> A pipeline graph can be defined with a nested vector.
+<2> Any function taking a single argument can be directly used as a job.
+<3> `putki.core/init` turns the graph into a map specifying jobs and their connections.
+<4> `putki.core/run!` takes a runner and starts the workflow according to the map.
+<5> The default workflow runner uses a local thread-pool to run and orchestrate jobs.
+
+## Examples
+
+There shall be examples of how to use putki in common and educational scenarios.
+
+TODO
+
+* [ ] Streaming JSON document
+* [ ] Implementing an ARMA filter
+* [ ] Processing nested data with a feedback loop
+* [ ] Simple Web server
+* [ ] Managing a pipeline as Integrant component
+* [ ] Using Integrant components as part of a pipeline
+
+## Related work and inspiration
+
+- https://streamz.readthedocs.io/en/latest/index.html[Streamz] -- Python data streaming
+- https://github.com/ztellman/manifold[manifold] -- Clojure lib for asynchronous programming with a stream abstraction
+- https://github.com/ngrunwald/datasplash[Datasplash] -- Clojure API for Google Cloud Dataflow
+- https://spark.apache.org/streaming/[Apache Spark Streaming] -- high-throughut distributed stream processing
+
+## License
+
+Copyright (C) 2020 http://www.metosin.fi/[Metosin Oy]
+
+putki is licensed under the link:LICENSE[Eclipse Public License v2.0].
