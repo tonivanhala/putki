@@ -87,7 +87,7 @@ TODO
 - https://streamz.readthedocs.io/en/latest/index.html[Streamz] -- Python data streaming
 - https://github.com/ztellman/manifold[manifold] -- Clojure lib for asynchronous programming with a stream abstraction
 - https://github.com/ngrunwald/datasplash[Datasplash] -- Clojure API for Google Cloud Dataflow
-- https://spark.apache.org/streaming/[Apache Spark Streaming] -- high-throughut distributed stream processing
+- https://spark.apache.org/streaming/[Apache Spark Streaming] -- high-throughput distributed stream processing
 
 ## License
 
