@@ -30,6 +30,8 @@ putki allows you to specify and run pipelines that process streaming data.
 - define and run pipelines on NodeJS using ClojureScript.
 - provide alternative schedulers for orchestrating jobs.
 - performance tests for different configurations.
+- provide implementations for configuring pipelines with automatic retry and
+  crash recovery, e.g., provide pipe implementation that persists intermediate data.
 
 ## Getting started
 
