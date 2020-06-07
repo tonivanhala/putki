@@ -1,0 +1,8 @@
+{:deps {org.clojure/clojure {:mvn/version "1.10.1"}}
+ :aliases
+ {:clj-kondo {:extra-deps {clj-kondo {:mvn/version "RELEASE"}}
+              :main-opts ["-m" "clj-kondo.main --lint src"]}
+  :format-check {:extra-deps {cljfmt {:mvn/version "0.6.7"}}
+                 :main-opts ["-m" "cljfmt.main" "check"]}
+  :format {:extra-deps {cljfmt {:mvn/version "0.6.7"}}
+           :main-opts ["-m" "cljfmt.main" "fix"]}}}

@@ -1,0 +1,22 @@
+{
+  "name": "putki",
+  "description": "specify and run pipelines that process streaming data",
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@commitlint/cli": "^8.3.5",
+    "@commitlint/config-conventional": "^8.3.4",
+    "husky": "^4.2.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:metosin/putki.git"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "npx commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "author": "Metosin Oy",
+  "license": "EPL-2.0"
+}
