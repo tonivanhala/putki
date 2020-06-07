@@ -21,6 +21,7 @@ putki allows you to specify and run pipelines that process streaming data.
   can be configured and modified using composition and core data functions.
 - support complex pipelines with branching, joining, and feedback cycles.
 - allow modifying pipelines while they are running.
+- provide tools for debugging pipelines and tracing the data flow.
 - provide a default runtime using a JVM thread pool,
   while allowing extension to other runtimes.
 
