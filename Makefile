@@ -6,3 +6,7 @@ lint:
 .PHONY: format-code
 format-code:
 		clojure -Aformat
+
+.PHONY: test
+test:
+		clojure -Atest -m kaocha.runner
