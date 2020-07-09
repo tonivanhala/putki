@@ -11,9 +11,19 @@ What is it this time?
 We're laying a pipeline
 ____
 
+:icons: font
+
 ## Overview
 
 putki allows you to specify and run pipelines that process streaming data. 
+
+[WARNING]
+.Pre-alpha software
+====
+putki is currently experimental software which may change unexpectedly and
+without notice. Documentation may lag or describe future plans for the library.
+Use at your own risk!
+====
 
 ## Main design criteria
 
