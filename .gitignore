@@ -1,8 +1,11 @@
 .cpcache
 node_modules
+out/
 
 *.iml
 .idea/
 projectFilesBackup/
 
 .clj-kondo
+.cljs_node_repl/
+
