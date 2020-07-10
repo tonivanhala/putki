@@ -9,4 +9,5 @@
            :main-opts ["-m" "cljfmt.main" "fix"]}
   :test {:extra-paths ["test"]
          :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.632"}
+                      lambdaisland/kaocha-cljs {:mvn/version "0.0-71"}
                       lambdaisland/kaocha-junit-xml {:mvn/version "0.0-70"}}}}}
