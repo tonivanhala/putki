@@ -10,4 +10,5 @@
   :test {:extra-paths ["test" "modules/putki-malli/src"]
          :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.632"}
                       lambdaisland/kaocha-cljs {:mvn/version "0.0-71"}
-                      lambdaisland/kaocha-junit-xml {:mvn/version "0.0-70"}}}}}
+                      lambdaisland/kaocha-junit-xml {:mvn/version "0.0-70"}
+                      metosin/malli {:git/url "https://github.com/metosin/malli" :sha "4026ddd1a2c86839f26abb5d70f004aaae751dcf"}}}}}
