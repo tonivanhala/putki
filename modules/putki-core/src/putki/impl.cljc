@@ -49,7 +49,7 @@
                 workflow]
                (filter identity)
                (apply util/deep-merge))
-        is-leaf (assoc-in [:refs :sinks] [job-id])))))
+        is-leaf (update-in [:refs :sinks] (fnil #(conj % job-id) []))))))
 
 (defn -init
   [graph]
