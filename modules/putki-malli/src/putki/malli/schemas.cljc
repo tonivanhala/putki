@@ -1,6 +1,6 @@
 (ns putki.malli.schemas
   (:require
-    [clojure.test]))
+   [clojure.test]))
 
 (def Id
   [:or string? keyword? uuid?])

@@ -1,6 +1,6 @@
 (ns putki.impl
   (:require
-    [putki.util.data :as util]))
+   [putki.util.data :as util]))
 
 (defn ensure-id
   [job]
@@ -43,12 +43,12 @@
                       siblings)
           is-leaf (not (sequential? sibling))]
       (cond-> (->>
-                [(when (sequential? sibling)
-                   (-init-recur workflow-job sibling))
-                 (when remaining (-init-recur parent remaining))
-                 workflow]
-                (filter identity)
-                (apply util/deep-merge))
+               [(when (sequential? sibling)
+                  (-init-recur workflow-job sibling))
+                (when remaining (-init-recur parent remaining))
+                workflow]
+               (filter identity)
+               (apply util/deep-merge))
         is-leaf (assoc-in [:refs :sinks] [job-id])))))
 
 (defn -init

@@ -1,10 +1,10 @@
 (ns putki.malli-test
   (:require
-    [clojure.test :refer [deftest testing is]]
-    [malli.core :as m]
-    [putki.malli :as pm]
-    [putki.malli.schemas :as schemas]
-    [putki.test-fixtures :as fixtures]))
+   [clojure.test :refer [deftest testing is]]
+   [malli.core :as m]
+   [putki.malli :as pm]
+   [putki.malli.schemas :as schemas]
+   [putki.test-fixtures :as fixtures]))
 
 (deftest valid-graph-test
   (is (pm/valid-graph? fixtures/+linear-graph+))
