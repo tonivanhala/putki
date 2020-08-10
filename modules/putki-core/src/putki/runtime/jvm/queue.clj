@@ -1,7 +1,7 @@
 (ns putki.runtime.jvm.queue
   (:import (java.util.concurrent ArrayBlockingQueue)))
 
-(def ^:private +default-queue-size+ 32)
+(def ^:private +default-fifo-queue-size+ 32)
 
 (defprotocol
   DataQueue
@@ -12,7 +12,7 @@
 
 (defn fifo-queue
   ([]
-   (fifo-queue +default-queue-size+))
+   (fifo-queue +default-fifo-queue-size+))
   ([queue-size]
    (let [queue (ArrayBlockingQueue. queue-size)]
      (reify
@@ -28,4 +28,7 @@
            (:item item)
            ::nil))
        (clear-queue [_this]
-         (.clear queue))))))
+         (.clear queue))
+       clojure.lang.Counted
+       (count [_this]
+         (.size queue))))))
