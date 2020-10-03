@@ -1,12 +1,12 @@
 .PHONY: lint
 lint:
-		clj -Aformat-check
-		clj -Aclj-kondo
+		clj -Mformat-check
+		clj -Mclj-kondo
 
 .PHONY: format-code
 format-code:
-		clojure -Aformat
+		clojure -Mformat
 
 .PHONY: test
 test:
-		clojure -Atest -m kaocha.runner
+		clojure -Mtest -m kaocha.runner
