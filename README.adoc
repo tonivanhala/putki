@@ -55,6 +55,12 @@ Use at your own risk!
 
 ## Getting started
 
+[WARNING]
+.Not yet implemented
+====
+The example code in this section does not currently run as specified.
+====
+
 Pipelines can be specified in hiccup-like syntax using nested vectors. 
 Call `putki.core/start!` to start the pipeline, and emit a value with
 `putki.core/emit` to feed it through the pipeline.
