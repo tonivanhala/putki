@@ -6,7 +6,7 @@
 (def ^:private +default-priority-queue-size+ 11)
 
 (defprotocol
-  DataQueue
+ DataQueue
   (put-item [this item])
   (peek-item [this])
   (pop-item [this])
@@ -58,11 +58,11 @@
                              priority (some-> item :item get-priority)]
                          (locking mutex
                            (and
-                             id
-                             priority
-                             (= priority (some->> id
-                                                  (.get valid-item-by-id)
-                                                  get-priority))))))]
+                            id
+                            priority
+                            (= priority (some->> id
+                                                 (.get valid-item-by-id)
+                                                 get-priority))))))]
      (reify
        DataQueue
        (put-item [_this item]
