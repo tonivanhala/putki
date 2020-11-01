@@ -25,3 +25,15 @@
   []
   #?(:clj (UUID/randomUUID)
      :cljs (random-uuid)))
+
+(defn wrap-into
+  "Wrap non-collection values into given collection.
+   Collections are only put into the collection (non-wrapped).
+   Examples:
+       (wrap-into [] :a) => [:a]
+       (wrap-into [] [:a]) => [:a]
+       (wrap-into #{} [:a]) => #{:a}"
+  [coll v]
+  (into coll (if (coll? v)
+               v
+               [v])))
