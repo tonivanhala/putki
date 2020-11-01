@@ -1,11 +1,11 @@
 {:deps {org.clojure/clojure {:mvn/version "1.10.1"}}
  :paths ["modules/putki-core/src"]
  :aliases
- {:clj-kondo {:extra-deps {clj-kondo {:mvn/version "RELEASE"}}
+ {:clj-kondo {:extra-deps {clj-kondo/clj-kondo {:mvn/version "RELEASE"}}
               :main-opts ["-m" "clj-kondo.main" "--lint" "modules" "--lint" "test"]}
-  :format-check {:extra-deps {cljfmt {:mvn/version "0.6.7"}}
+  :format-check {:extra-deps {cljfmt/cljfmt {:mvn/version "0.6.7"}}
                  :main-opts ["-m" "cljfmt.main" "check" "modules" "test"]}
-  :format {:extra-deps {cljfmt {:mvn/version "0.6.7"}}
+  :format {:extra-deps {cljfmt/cljfmt {:mvn/version "0.6.7"}}
            :main-opts ["-m" "cljfmt.main" "fix" "modules" "test"]}
   :test {:extra-paths ["test" "modules/putki-malli/src"]
          :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.632"}
