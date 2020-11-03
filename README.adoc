@@ -55,13 +55,7 @@ Use at your own risk!
 
 ## Getting started
 
-[WARNING]
-.Not yet implemented
-====
-The example code in this section does not currently run as specified.
-====
-
-Pipelines can be specified in hiccup-like syntax using nested vectors. 
+Pipelines can be specified in hiccup-like syntax using nested vectors.
 Call `putki.core/start!` to start the pipeline, and emit a value with
 `putki.core/emit` to feed it through the pipeline.
 
@@ -96,6 +90,12 @@ The same actions can be split into explicit, separate, steps as below.
 <3> `putki.core/init` turns the graph into a map specifying jobs and their connections.
 <4> `putki.core/run!` takes a runner and starts the workflow according to the map.
 <5> The default workflow runner uses a local thread-pool to run and orchestrate jobs.
+
+[WARNING]
+.There is no stopping
+====
+Stopping and resetting a running pipeline is currently not possible.
+====
 
 ## Examples
 
