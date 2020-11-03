@@ -57,18 +57,6 @@
   (let [^Runnable job (create-job outputs action item)]
     (.submit executor-pool job)))
 
-(defn get-output-pipes
-  [{:keys [pipes] :as _workflow} job-id]
-  (seq
-   (keep
-    (fn -matches-job-id?
-      [[pipe-id {:keys [input output]}]]
-      (when (and
-             (= job-id input)
-             output)
-        pipe-id))
-    pipes)))
-
 (defn take-and-process!
   [{:keys [jobs pipes] :as workflow}
    ^ExecutorService executor-pool

@@ -28,3 +28,15 @@
   (->> workflow
        get-sink-ids
        (select-keys (get-jobs workflow))))
+
+(defn get-output-pipes
+  [{:keys [pipes]} job-id]
+  (seq
+    (keep
+       (fn -matches-job-id?
+           [[pipe-id {:keys [input output]}]]
+           (when (and
+                   (= job-id input)
+                   output)
+             pipe-id))
+       pipes)))
