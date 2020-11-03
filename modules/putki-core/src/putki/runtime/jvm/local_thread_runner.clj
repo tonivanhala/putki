@@ -3,7 +3,8 @@
    [putki.runtime.protocol :as protocol]
    [putki.runtime.jvm.thread-pool]
    [putki.runtime.jvm.queue :as queue]
-   [putki.util.data :as util])
+   [putki.util.data :as util]
+   [putki.util.runtime :as runtime])
   (:import (java.util.concurrent ExecutorService)))
 
 (def +poll-interval-ms+ 500)
@@ -58,20 +59,33 @@
     (.submit executor-pool job)))
 
 (defn take-and-process!
-  [{:keys [jobs pipes] :as workflow}
+  [{:keys [workflow]}
    ^ExecutorService executor-pool
    pipe-buffers
    pipe-id]
-  (when-let [item (->> pipe-id
-                       (get pipe-buffers)
-                       (queue/pop-item))]
-    (when-not (= ::queue/nil item)
-      (let [{:keys [output]} (get pipes pipe-id)
-            {:keys [action]} (get jobs output)
-            outputs (map
-                     #(get pipe-buffers %)
-                     (get-output-pipes workflow output))]
-        (submit-job executor-pool outputs action item)))))
+  (let [{:keys [pipes jobs]} workflow]
+    (when-let [item (->> pipe-id
+                         (get pipe-buffers)
+                         (queue/pop-item))]
+      (when-not (= ::queue/nil item)
+        (let [{:keys [output]} (get pipes pipe-id)
+              {:keys [action]} (get jobs output)
+              outputs (map
+                       #(get pipe-buffers %)
+                       (runtime/get-output-pipes workflow output))]
+          (submit-job executor-pool outputs action item))))))
+
+(defn submit-to-sources!
+  [workflow
+   ^ExecutorService executor-pool
+   pipe-buffers
+   data]
+  (doseq [[job-id source] (runtime/get-sources workflow)]
+    (let [action (:action source)
+          outputs (map
+                    #(get pipe-buffers %)
+                    (runtime/get-output-pipes (:workflow workflow) job-id))]
+      (submit-job executor-pool outputs action data))))
 
 (defn start-coordination-thread!
   [{:keys [running ^ExecutorService executor-pool pipe-buffers workflow]}]
@@ -88,23 +102,34 @@
 
 (defn local-thread-runner
   []
-  (let [running (atom nil)]
+  (let [running (atom nil)
+        workflow (atom nil)
+        exec-pool (atom nil)
+        pipe-buffers (atom nil)
+        coordination-threads (atom nil)]
     (reify
       protocol/Executor
       (run [_this workflow-with-refs]
-        (let [workflow (:workflow workflow-with-refs)
-              {:keys [execution coordination] :as _thread-counts} (putki.runtime.jvm.thread-pool/get-thread-counts)
-              ^ExecutorService exec-pool (putki.runtime.jvm.thread-pool/create-thread-pool execution)
-              pipe-buffers (create-buffers (-> workflow :pipes (keys)))]
+        (let [{:keys [execution coordination] :as _thread-counts} (putki.runtime.jvm.thread-pool/get-thread-counts)]
           (reset! running true)
-          (dotimes [n coordination]
-            (start-coordination-thread! {:id (str "coordinator-" n)
-                                         :executor-pool exec-pool
-                                         :pipe-buffers pipe-buffers
-                                         :workflow workflow
-                                         :running running}))))
-      (halt [this execution]
+          (reset! workflow workflow-with-refs)
+          (reset! exec-pool (putki.runtime.jvm.thread-pool/create-thread-pool execution))
+          (reset! pipe-buffers (create-buffers (-> workflow (deref) :workflow :pipes (keys))))
+          (reset!
+            coordination-threads
+            (mapv
+              #(start-coordination-thread! {:id (str "coordinator-" %)
+                                            :executor-pool @exec-pool
+                                            :pipe-buffers @pipe-buffers
+                                            :workflow @workflow
+                                            :running running})
+              (range coordination)))))
+      (halt [this]
         (reset! running false))
-      (reset [this execution]
+      (reset [this]
         (reset! running false)
-        (reset! running true)))))
+        (reset! running true))
+      protocol/DataConsumer
+      (consume [this data]
+        (submit-to-sources! @workflow @exec-pool @pipe-buffers data))
+      (consume [this job-id data]))))

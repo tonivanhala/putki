@@ -2,5 +2,10 @@
 
 (defprotocol Executor
   (run [this workflow])
-  (halt [this execution])
-  (reset [this execution]))
+  (halt [this])
+  (reset [this]))
+
+(defprotocol DataConsumer
+  (consume
+    [this data]
+    [this job-id data]))

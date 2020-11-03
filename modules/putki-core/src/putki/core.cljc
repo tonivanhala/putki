@@ -10,21 +10,26 @@
 
 (defn run!
   [runtime workflow]
-  (when-let [execution (runtime/run runtime workflow)]
-    {:runtime runtime
-     :workflow workflow
-     :execution execution}))
+  (runtime/run runtime workflow))
 
 (defn start!
   [graph]
-  (some->> graph
-           init
-           (run! (putki.runtime.default/local-thread-runner))))
+  (let [workflow (init graph)
+        runtime (putki.runtime.default/local-thread-runner)]
+    (run! runtime workflow)
+    {:workflow workflow
+     :runtime runtime}))
 
 (defn halt!
-  [pipeline]
-  (runtime/halt (:runtime pipeline) (:execution pipeline)))
+  [runtime]
+  (runtime/halt runtime))
 
 (defn reset!
-  [pipeline]
-  (runtime/reset (:runtime pipeline) (:execution pipeline)))
+  [runtime]
+  (runtime/reset runtime))
+
+(defn emit
+  ([pipeline data]
+   (runtime/consume (:runtime pipeline) data))
+  ([pipeline job-id data]
+   (runtime/consume (:runtime pipeline) job-id data)))
